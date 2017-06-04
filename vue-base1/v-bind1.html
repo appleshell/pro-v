@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="js/jquery-1.12.3.js"></script>
+	<script src="js/vue.js"></script>
+	<style>
+		ul,li{
+			margin: 0;
+			padding:0;
+			list-style: none;
+		}
+		.clear:after{
+			content: '';
+			display: block;
+			clear: both;
+			overflow: auto;
+		}
+		li{
+			float: left;
+			padding: 12px 18px;
+		}
+		li.active{
+			color:red;
+		}
+	</style>
+</head>
+<body>
+	<ul id="app" class="clear">
+		<li :class="{'active':item.active}" @click="navTab(item)" v-for="item in nav">{{item.msg}}</li>
+	</ul>
+	<script>
+		'use strict'
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				nav:[
+					{
+						msg:'首页',
+						active:true,
+						index:0
+					},
+					{
+						msg:'产品',
+						active:false,
+						index:1
+					},
+					{
+						msg:'资讯',
+						active:false,
+						index:2
+					},
+				]
+			},
+			methods:{
+				navTab:function(item){
+					// item.active = false;
+					// this.nav.forEach(function(el){
+					// 	el.active = false;
+					// })
+					for (var i = 0; i < this.nav.length; i++) {
+						this.nav[i].active = false;
+					}
+					item.active = true;
+				}
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>base1</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<form id="app">
+		<div v-if="num > 0.5">
+			大于0.5；
+			{{num}}
+		</div>
+		<div v-else>
+			不大于0.5
+			{{num}}
+		</div>
+	</form>
+	<script>
+		// vue实例
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				num:Math.random(),
+			}
+		});
+	</script>
+</body>
+</html>

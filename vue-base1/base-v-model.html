@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>base1</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!-- <input type="text" v-model="message" placeholder="edit me">
+		<p>{{message}}</p> -->
+
+		<span>Multiline message is:</span>
+		<p style="white-space: pre;">{{message}}</p>
+		<br>
+		<textarea v-model="message" placeholder="add multiple lines" style="resize:none;"></textarea>
+	</div>
+	<script>
+		// vue实例
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				message:'测试文本'
+			}
+		});
+	</script>
+</body>
+</html>
