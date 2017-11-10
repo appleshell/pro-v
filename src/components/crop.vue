@@ -52,19 +52,19 @@
           var fd = new FormData();
           fd.append('file',blob);
 
-          // axios({D
-          //   method:'post',
-          //   url:'http://172.16.36.234:8889/file/upload',
-          //   data:fd,
-          // })
-          // .then(function(response){
-          //   alert(12)
-          //   console.log(response)
-          // })
-          // .catch(function(error){
-          //   alert(34)
-          //   console.log(error)
-          // })
+          axios({
+            method:'post',
+            url:'http://172.16.36.234:8889/file/upload',
+            data:fd,
+          })
+          .then(function(response){
+            alert(12)
+            console.log(response)
+          })
+          .catch(function(error){
+            alert(34)
+            console.log(error)
+          })
         })
         this.imgCropState = 2;
       },
