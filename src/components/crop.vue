@@ -58,11 +58,9 @@
             data:fd,
           })
           .then(function(response){
-            alert(12)
             console.log(response)
           })
           .catch(function(error){
-            alert(34)
             console.log(error)
           })
         })
