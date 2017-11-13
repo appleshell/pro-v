@@ -1,12 +1,16 @@
 <template>
   <div class="uploadC">
-    <input type="file" @change="getFile" value="图片" id="upload" style="display:none;">
-    <label for="upload">{{name}}</label>
-    <button @click="move">move</button>
-    <button @click="get">get</button>
-    <div v-show="imgCropState === 2"><img :src="imgUrl" alt=""></div>
+    <input type="file" @change="getFile" value="图片" id="upload" :accept="imgType">
+    <label for="upload">
+      <slot></slot>
+    </label>
+    <!-- 图片裁剪区 -->
     <div v-show="imgCropState === 1">
-      <img :src="imgUrl" height="200" width="200" alt="" id="image" ref="image">
+      <img :src="imgUrl" alt="" id="image" ref="image">
+    </div>
+    <div>
+      <button @click="move" v-show="imgCropState === 1">move</button>
+      <button @click="get" v-show="imgCropState === 1">get</button>
     </div>
   </div>
 </template>
@@ -19,20 +23,53 @@
       return {
         name:'选择图片',
         cropper:'',
-        imgUrl:'./src/assets/logo.png',
-        imgCropState:0
+        imgUrl:'',
+        imgCropState:0,//1:显示图片裁剪区，2：裁剪结束
       };
     },
+    props:{
+      action:{
+        type:String,
+        default:''
+      },
+      onSuccess:{
+        type:Function,
+        default:function(){}
+      },
+      imgSize:{
+        type:String,
+        default:'2MB'
+      },
+      imgType:{
+        type:String,
+        default:'image/jpeg,image/jpg,image/png'
+      }
+    },
     mounted(){
+      //实例化裁剪对象
       this.cropper = new Cropper(this.$refs.image,{
         aspectRatio: 1 / 1,
         viewMode: 1,
       })
-      
     },
     methods: {
+      //选择图片并判断图片大小。
       getFile(e){
         let files = e.target.files;
+        let imgSize = this.imgSize.toUpperCase()
+        let unit = imgSize.slice(imgSize.length-2);
+        let sizeNum = imgSize.slice(0,imgSize.length-2)
+        if (unit === 'MB') {
+          if (files[0].size/1024/1024 > sizeNum) {
+            alert('上传头像图片大小不能超过'+imgSize)
+            return;
+          }
+        } else if(unit === 'KB'){
+          if (files[0].size/1024 > sizeNum) {
+            alert('上传头像图片大小不能超过'+imgSize)
+            return;
+          }
+        }
         this.imgUrl = window.URL.createObjectURL(files[0])
         this.cropper.replace(this.imgUrl)
         this.imgCropState = 1;
@@ -40,6 +77,7 @@
       move(){
         this.cropper.move(1)
       },
+      //上传裁剪后的图片
       get(){
         let _this = this;
         let img = this.cropper.getCroppedCanvas();
@@ -54,60 +92,38 @@
 
           axios({
             method:'post',
-            url:'http://172.16.36.234:8889/file/upload',
+            url:_this.action,
             data:fd,
           })
           .then(function(response){
-            console.log(response)
+            _this.onSuccess(response,url)
           })
           .catch(function(error){
-            console.log(error)
+            _this.onSuccess(error,url)
+            alert('上传图片失败')
           })
         })
         this.imgCropState = 2;
       },
-      // handleAvatarSuccess(res, file) {
-      //   this.imageUrl = URL.createObjectURL(file.raw);
-      // },
-      // beforeAvatarUpload(file) {
-      //   console.log(file)
-      //   const isJPG = file.type === 'image/jpeg';
-      //   const isLt2M = file.size / 1024 / 1024 < 2;
-
-      //   if (!isJPG) {
-      //     this.$message.error('上传头像图片只能是 JPG 格式!');
-      //   }
-      //   if (!isLt2M) {
-      //     this.$message.error('上传头像图片大小不能超过 2MB!');
-      //   }
-      //   return isJPG && isLt2M;
-      // }
     }
   }
 </script>
 
 <style>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
+  #upload{
+    display: none;
+  }
+  #image{
+    width:100%;
+    height: 360px;
+  }
+  label{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:180px;
+    height: 180px;
+    border:1px dotted #999;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px !important;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
   }
 </style>
