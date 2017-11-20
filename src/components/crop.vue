@@ -1,7 +1,7 @@
 <template>
   <div class="uploadC">
     <input type="file" @change="getFile" value="图片" id="upload" :accept="imgType">
-    <label for="upload">
+    <label for="upload"  v-show="imgCropState !== 1">
       <slot></slot>
     </label>
     <!-- 图片裁剪区 -->
@@ -43,6 +43,18 @@
       imgType:{
         type:String,
         default:'image/jpeg,image/jpg,image/png'
+      },
+      quality:{
+        type:Number,
+        default:0.8;
+      },
+      compressWidth:{
+        type:Number,
+        default:360
+      },
+      compressHeight:{
+        type:Number,
+        default:360
       }
     },
     mounted(){
@@ -80,9 +92,10 @@
       //上传裁剪后的图片
       get(){
         let _this = this;
-        let img = this.cropper.getCroppedCanvas();
+        let originCrop = this.cropper.getCroppedCanvas();
+        let compressedCrop = this.compressImg(originCrop)
         //获取裁剪后图片的blob对象
-        img.toBlob(function(blob){
+        compressedCrop.toBlob(function(blob){
           //blob对象转成可用img元素展示的图片地址
           let url = URL.createObjectURL(blob);
           _this.imgUrl = url;
@@ -102,9 +115,20 @@
             _this.onSuccess(error,url)
             alert('上传图片失败')
           })
-        })
+        },'image/jpex',this.quality)
         this.imgCropState = 2;
       },
+      //压缩裁剪后的图片
+      compressImg(image){
+        let imgWidth = image.width;
+        let imgHeight = image.height; 
+        let canvasEle = document.createElement('canvas');
+        let canvasCtx = canvasEle.getContext('2d');
+        canvasEle.width = this.compressWidth;
+        canvasEle.height = this.compressHeight;
+        canvasCtx.drawImage(image,0,0,imgWidth,imgHeight,0,0,canvasEle.width,canvasEle.height);
+        return canvasEle;
+      }
     }
   }
 </script>
