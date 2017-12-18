@@ -1,9 +1,9 @@
 <template>
 	<div class="container">
-		<crop :action="action" :on-success="cropSuccess" :img-size="imgSize" :img-type="imgType">
+		<!-- <crop :action="action" :on-success="cropSuccess" :img-size="imgSize" :img-type="imgType">
 			<img class="headPic" v-if="imgUrl" :src="imgUrl" alt="" >
 			<i v-else></i>
-		</crop>
+		</crop> -->
 	</div>
 </template>
 
