@@ -22,6 +22,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		background: #fff;
 	}
 	.tab-bar li{
 		flex:1;
