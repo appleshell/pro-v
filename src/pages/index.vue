@@ -3,7 +3,7 @@
 		<div class="slider">
 			<mt-swipe :auto="3000">
 				<!-- <mt-swipe-item v-for="item in banner"><img :src="item.pic" alt=""></mt-swipe-item> -->
-				<mt-swipe-item v-for="item in banner" :style="'background:url('+item.pic+') no-repeat center center;background-size:cover;'"></mt-swipe-item>
+				<mt-swipe-item v-for="item in banner" :key="item.id" :style="'background:url('+item.pic+') no-repeat center center;background-size:cover;'"></mt-swipe-item>
 			</mt-swipe>
 		</div>
 		<div class="type">
@@ -11,7 +11,7 @@
 		</div>
 		<div class="shop">
 			<h4>附近商家</h4>
-			<shopListItem v-for="item in shopList" :shopList="item" :dict='dict'></shopListItem>
+			<shopListItem v-for="item in shopList" :key="item.id" :shopList="item" :dict='dict'></shopListItem>
 		</div>
 	</div>
 </template>
@@ -24,8 +24,8 @@
 		data(){
 			return {
 				banner:[
-					{pic:require('../assets/img/index/banner.jpg')},
-					{pic:require('../assets/img/index/banner.jpg')}
+					{pic:require('../assets/img/index/banner.jpg'),id:1},
+					{pic:require('../assets/img/index/banner.jpg'),id:2}
 				],
 				typeList:[
 					{
